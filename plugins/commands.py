@@ -40,7 +40,7 @@ async def handle_message(client, message):
     else:
         await client.edit_message_text(chat_id=message.chat.id, message_id=message_id, text=compiled_message)
 
-@Client.on_message(filters.group & filters.user(ADMINS) & filters.command("done"))
+@Client.on_message(filters.command('done') & filters.user(ADMINS))
 async def start(client, message):
     global names, message_id
     names = []
