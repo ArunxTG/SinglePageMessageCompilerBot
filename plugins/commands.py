@@ -2,8 +2,6 @@ from info import *
 from pyrogram import Client, filters, enums
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-# Dictionary to store message IDs and names for each group
-group_data = {}
 
 @Client.on_message(filters.command("start"))
 async def start(client, message):
@@ -28,43 +26,23 @@ async def start(client, message):
         parse_mode=enums.ParseMode.HTML
     )
 
-@Client.on_message(filters.group & filters.text & ~filters.command(['done', 'start', 'connect', 'disconnect']))
+names = []
+message_id = None
+
+@Client.on_message(filters.group & filters.text & ~filters.command(['done', 'start']))
 async def handle_message(client, message):
-    global group_data
-    chat_id = message.chat.id
-
-    if chat_id not in group_data:
-        group_data[chat_id] = (None, [])
-
-    message_id, names = group_data[chat_id]
+    global names, message_id
     names.append(message.text.strip())
-    compiled_message = "\n".join([f"{i + 1}. {name}" for i, name in enumerate(names)])
-
+    compiled_message = "\n".join([f"<b>{i + 1}. {name}</b>" for i, name in enumerate(names)])
     if message_id is None:
         sent_message = await message.reply_text(compiled_message)
-        group_data[chat_id] = (sent_message.id, names)
+        message_id = sent_message.id
     else:
         await client.edit_message_text(chat_id=message.chat.id, message_id=message_id, text=compiled_message)
-        group_data[chat_id] = (message_id, names)
 
 @Client.on_message(filters.group & filters.user(ADMINS) & filters.command("done"))
-async def done(client, message):
-    global group_data
-    chat_id = message.chat.id
-
-    if chat_id in group_data:
-        message_id, names = group_data.pop(chat_id)
-        await client.delete_messages(chat_id=message.chat.id, message_ids=[message_id])
-        await message.reply_text("<b>Single Page All Message Done ✅<b>")
-
-@Client.on_message(filters.group & filters.user(ADMINS) & filters.command("connect"))
-async def connect_to_group(client, message):
-    # Connect the bot to the group
-    await client.join_chat(message.chat.id)
-    await message.reply_text("<b>Bot connected to the group.</b>")
-
-@Client.on_message(filters.group & filters.user(ADMINS) & filters.command("disconnect"))
-async def disconnect_from_group(client, message):
-    # Disconnect the bot from the group
-    await client.leave_chat(message.chat.id)
-    await message.reply_text("<b>Bot disconnected from the group.</b>")
+async def start(client, message):
+    global names, message_id
+    names = []
+    message_id = None 
+    await message.reply_text("<b>Single Page All Message Done ✅</b>")
