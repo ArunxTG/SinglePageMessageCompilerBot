@@ -20,5 +20,6 @@ async def start(client, message):
         await message.reply_text(
             text=text,
             reply_markup=reply_markup,
+            quote=True,
             parse_mode=enums.ParseMode.HTML
         )
