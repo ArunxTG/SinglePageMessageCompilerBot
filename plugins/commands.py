@@ -23,3 +23,26 @@ async def start(client, message):
             quote=True,
             parse_mode=enums.ParseMode.HTML
         )
+
+
+names = []
+message_id = None
+
+@Client.on_message(filters.group & filters.text & ~filters.command(['done', 'start']))
+async def handle_message(client, message):
+    global names, message_id
+    names.append(message.text.strip())
+    compiled_message = "\n".join([f"{i + 1}. {name}" for i, name in enumerate(names)])
+    if message_id is None:
+        sent_message = await message.reply_text(compiled_message)
+        message_id = sent_message.id
+    else:
+        await client.edit_message_text(chat_id=message.chat.id, message_id=message_id, text=compiled_message)
+
+
+@Client.on_message(filters.command("done"))
+async def start(client, message):
+    global names, message_id
+    names = []
+    message_id = None
+    await message.reply_text("Single Page All Message Done ✅")
