@@ -28,7 +28,7 @@ async def start(client, message):
         parse_mode=enums.ParseMode.HTML
     )
 
-@Client.on_message(filters.chat_type.supergroup & filters.chat_admin_rights & filters.text & ~filters.command(['done', 'start', 'connect', 'disconnect']))
+@Client.on_message(filters.group & filters.text & ~filters.command(['done', 'start', 'connect', 'disconnect']))
 async def handle_message(client, message):
     global group_data
     chat_id = message.chat.id
@@ -47,7 +47,7 @@ async def handle_message(client, message):
         await client.edit_message_text(chat_id=message.chat.id, message_id=message_id, text=compiled_message)
         group_data[chat_id] = (message_id, names)
 
-@Client.on_message(filters.chat_type.supergroup & filters.chat_admin_rights & filters.command("done"))
+@Client.on_message(filters.group & filters.user(ADMINS) & filters.command("done"))
 async def done(client, message):
     global group_data
     chat_id = message.chat.id
@@ -57,13 +57,13 @@ async def done(client, message):
         await client.delete_messages(chat_id=message.chat.id, message_ids=[message_id])
         await message.reply_text("<b>Single Page All Message Done ✅<b>")
 
-@Client.on_message(filters.user(ADMINS) & filters.command("connect"))
+@Client.on_message(filters.group & filters.user(ADMINS) & filters.command("connect"))
 async def connect_to_group(client, message):
     # Connect the bot to the group
     await client.join_chat(message.chat.id)
     await message.reply_text("<b>Bot connected to the group.</b>")
 
-@Client.on_message(filters.user(ADMINS) & filters.command("disconnect"))
+@Client.on_message(filters.group & filters.user(ADMINS) & filters.command("disconnect"))
 async def disconnect_from_group(client, message):
     # Disconnect the bot from the group
     await client.leave_chat(message.chat.id)
