@@ -24,10 +24,11 @@ class Bot(Client):
         await app.setup()
         bind_address = "0.0.0.0"
         await web.TCPSite(app, bind_address, PORT).start()
+        print("Bot Start")
 
     async def stop(self, *args):
         await super().stop()
-        logging.info("Bot stopped Bye.")
+        print("Bot stop")
     
     async def iter_messages(
         self,
