@@ -2,6 +2,8 @@ from info import *
 from pyrogram import Client, filters, enums
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+names = []
+message_id = None
 
 @Client.on_message(filters.command("start"))
 async def start(client, message):
@@ -25,9 +27,6 @@ async def start(client, message):
         quote=True,
         parse_mode=enums.ParseMode.HTML
     )
-
-names = []
-message_id = None
 
 @Client.on_message(filters.group & filters.text & ~filters.command(['done', 'start']))
 async def handle_message(client, message):
