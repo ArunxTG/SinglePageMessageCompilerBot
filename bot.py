@@ -2,7 +2,7 @@ from info import *
 from aiohttp import web
 from pyrogram import types
 from pyrogram import Client
-from plugins import web_server
+from plugins import web_server, check_and_post_updates
 from typing import Union, Optional, AsyncGenerator
 
 class Bot(Client):
@@ -20,6 +20,7 @@ class Bot(Client):
 
     async def start(self):
         await super().start()
+        await check_and_post_updates()
         app = web.AppRunner(await web_server())
         await app.setup()
         bind_address = "0.0.0.0"
