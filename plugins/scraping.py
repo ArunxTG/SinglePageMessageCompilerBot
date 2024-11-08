@@ -10,7 +10,6 @@ CHANNEL_ID = -1001919732447  # Replace with your Telegram Channel ID
 RSS_FEED_URL = 'https://www.1tamilmv.wf/'  # Replace with the actual RSS feed URL if it's different
 MONGO_URI = 'mongodb+srv://KingSrilanga:KingSrilanga10@cluster0.w6gdp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'  # Replace with your MongoDB URI
 
-#app = Client("tamilmv_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 # Connect to MongoDB
 mongo_client = MongoClient(MONGO_URI)
