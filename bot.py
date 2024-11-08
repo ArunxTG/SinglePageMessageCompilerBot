@@ -21,7 +21,8 @@ class Bot(Client):
 
     async def start(self):
         await super().start()
-        await MovieScraper()
+        await MovieScraper().start()
+        print("Scraping Start")
         app = web.AppRunner(await web_server())
         await app.setup()
         bind_address = "0.0.0.0"
