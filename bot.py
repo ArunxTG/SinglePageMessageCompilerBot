@@ -3,7 +3,7 @@ from aiohttp import web
 from pyrogram import types
 from pyrogram import Client
 from plugins import web_server
-from plugins.scraping check_and_post_updates
+from plugins.scraping import check_and_post_updates
 from typing import Union, Optional, AsyncGenerator
 
 class Bot(Client):
