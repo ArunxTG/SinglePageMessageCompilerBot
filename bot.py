@@ -3,7 +3,7 @@ from aiohttp import web
 from pyrogram import types
 from pyrogram import Client
 from plugins import web_server
-from plugins.scraping import check_and_post_updates
+from plugins.scraping import MovieScraper
 from typing import Union, Optional, AsyncGenerator
 
 class Bot(Client):
@@ -21,7 +21,7 @@ class Bot(Client):
 
     async def start(self):
         await super().start()
-        await check_and_post_updates()
+        await MovieScraper()
         app = web.AppRunner(await web_server())
         await app.setup()
         bind_address = "0.0.0.0"
