@@ -1,3 +1,7 @@
 pyrogram
 tgcrypto
 aiohttp
+feedparser
+requests
+beautifulsoup4
+pymongo
