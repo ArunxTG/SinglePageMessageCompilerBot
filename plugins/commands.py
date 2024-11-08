@@ -2,10 +2,7 @@ from info import *
 from pyrogram import Client, filters, enums
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-names = []
-message_id = None
-
-@Client.on_message(filters.command("start"))
+@Client.on_message(filters.command("start") & filters.incoming)
 async def start(client, message):
     buttons = [[
         InlineKeyboardButton('👨‍💻 𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝗋', url=f"https://telegram.me/HarixTGx")
@@ -27,21 +24,3 @@ async def start(client, message):
         quote=True,
         parse_mode=enums.ParseMode.HTML
     )
-
-@Client.on_message(filters.group & filters.text & ~filters.command(['done', 'start']))
-async def handle_message(client, message):
-    global names, message_id
-    names.append(message.text.strip())
-    compiled_message = "\n".join([f"<b>{i + 1}. {name}</b>" for i, name in enumerate(names)])
-    if message_id is None:
-        sent_message = await message.reply_text(compiled_message)
-        message_id = sent_message.id
-    else:
-        await client.edit_message_text(chat_id=message.chat.id, message_id=message_id, text=compiled_message)
-
-@Client.on_message(filters.command('done'))
-async def start(client, message):
-    global names, message_id
-    names = []
-    message_id = None 
-    await message.reply_text("<b>Single Page All Message Done ✅</b>")
